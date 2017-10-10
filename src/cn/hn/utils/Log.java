@@ -12,7 +12,7 @@ public class Log {
         logger.setLevel(Level.INFO);
     }
     public static void loggerInfo(String info){
-        logger.info("My log info is ===> " + info);
+        logger.info("My log info is ===> \n" + info);
 
     }
    /* public static void loggerInfo(boolean info){
