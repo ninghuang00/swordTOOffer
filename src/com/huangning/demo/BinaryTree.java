@@ -98,4 +98,69 @@ public class BinaryTree {
         }
     }
 
+    /*
+    根据前序遍历和中序遍历的结果重建二叉树
+     */
+    public static TreeNode rebuildBinaryTree(int[] preorder, int[] inorder) {
+        if(preorder == null || inorder == null || (preorder.length != inorder.length)){
+            return null;
+        }
+        int prestart = 0; //起始坐标
+        int preend = preorder.length - 1;   //重点坐标
+        int instart = 0;
+        int inend = inorder.length - 1;
+        return rebuildHelper(preorder,prestart,preend,inorder,instart,inend);
+
+    }
+
+    private static TreeNode rebuildHelper(int[] preorder, int prestart, int preend, int[] inorder, int instart, int inend) {
+        int rootValue = preorder[prestart];
+        TreeNode root = new TreeNode(rootValue);
+        root.left = null;
+        root.right = null;
+
+        //子树中的最后一个,即叶节点
+        if(prestart == preend){
+            if(instart == inend && preorder[prestart] == inorder[instart]){
+                return root;
+            }else{
+                //Log.loggerInfo("invalid input");
+                throw new RuntimeException("invalid input ");
+            }
+        }
+
+        //在中序子序列中遍历查找根节点,注意要子序列
+        int rootInorder = instart;
+        while(rootInorder <= inend && inorder[rootInorder] != rootValue){
+            ++rootInorder;
+        }
+        //没找到
+        if(rootInorder > inend){
+            throw new RuntimeException("invalid input");
+        }
+        //根据中序遍历中的根节点坐标重构左右子树
+        int leftLength = rootInorder - instart;//左子树的长度
+
+        /*Log.loggerInfo("root value is " + rootValue + "\n" +
+                "prestart is  " + prestart + "\n" +
+                "leftLength is " + leftLength + "\n" +
+                "rootInorder is " + rootInorder + "\n" +
+                "preend is " + preend
+        );*/
+
+
+        //左子树长度大于0
+        if(leftLength > 0){
+            root.left = rebuildHelper(preorder, prestart + 1, prestart + leftLength,
+                    inorder, instart, rootInorder - 1);
+        }
+        //右子树长度大于0
+        if(preend - prestart > leftLength){
+            root.right = rebuildHelper(preorder, prestart + leftLength + 1, preend,
+                    inorder, rootInorder + 1, inend);
+        }
+
+        return root;
+    }
+
 }

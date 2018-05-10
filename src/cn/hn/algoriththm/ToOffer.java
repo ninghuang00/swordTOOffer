@@ -1,8 +1,10 @@
 package cn.hn.algoriththm;
 
 import cn.hn.utils.Log;
+import cn.hn.utils.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -17,6 +19,337 @@ public class ToOffer {
 
     /*===================================================================================================*/
 
+    /*
+     * title:合并两个排序的链表
+     * explanation:合并两个递增的链表,合并之后也是递增
+     * tip:
+     * example:
+     * param:
+     * return:
+     */
+    public ListNode mergeList(ListNode head1, ListNode head2) {
+        if (head1 == null) {
+            return head2;
+        } else if (head2 == null) {
+            return head1;
+        }
+        ListNode mergeHead = null;
+        if (head1.val < head2.val) {
+            mergeHead = head1;
+            mergeHead.nextNode = mergeList(head1.nextNode, head2);
+        }else{
+            mergeHead = head2;
+            mergeHead.nextNode = mergeList(head1, head2.nextNode);
+        }
+
+        return mergeHead;
+    }
+
+    /*
+     * title:反转链表
+     * explanation:给定一个单向链表头节点,反转整个链表
+     * tip:记录当前节点的前一个节点,当前节点的后面一个节点
+     * example:
+     * param:
+     * return:
+     */
+    public ListNode reverseList(ListNode head) {
+        ListNode reverseHead = null;
+        ListNode curNode = head;
+        ListNode preNode = null;
+        while (curNode != null) {
+            ListNode nextNode = curNode.nextNode;
+
+            if (nextNode == null) {
+                reverseHead = curNode;
+            }
+
+            curNode.nextNode = preNode; //将当前节点的下一个节点指向前当前节点的前一个节点
+            preNode = curNode;  //当前节点变成前一个节点
+            curNode = nextNode; //下一个节点变成当前节点
+
+        }
+
+        return reverseHead;
+    }
+    /*
+     * title:链表中的环的入口
+     * explanation:判断链表中是否存在环,如果存在,返回环的入口
+     * tip: 还是用两个指针,快的指针是慢的指针的指针的速度的两倍速度,当指针相遇的时候,说明存在环
+     *      然后从相遇的节点开始计数就能得到环的大小,
+     *      从头指针开始,快指针先走环的大小的距离,然后慢指针开始走,相遇的节点就是入口
+     * example:
+     * param:
+     * return:
+     */
+    public ListNode entryNodeOfLoop(ListNode head){
+        if(head == null){
+            return null;
+        }
+        ListNode meetNode = findMeetNode(head);
+        if (meetNode == null) {
+            return null;
+        }
+        int count = 1;  //根据观察得
+        ListNode startNode = meetNode.nextNode;
+        while(startNode != meetNode){
+            startNode = startNode.nextNode;
+            count ++;
+        }
+        startNode = head;
+        for(int i = 0; i < count; ++ i) {
+            startNode = startNode.nextNode;
+        }
+        ListNode behindNode = head;
+        while (startNode != behindNode) {
+            startNode = startNode.nextNode;
+            behindNode = behindNode.nextNode;
+        }
+        return startNode;
+
+    }
+    private ListNode findMeetNode(ListNode head){
+        if (head == null) {
+            return null;
+        }
+        ListNode slowNode = head.nextNode;
+        if (slowNode == null) {
+            return null;
+        }
+        ListNode fastNode = slowNode.nextNode;
+        while (fastNode != null) {
+            if (fastNode == slowNode) {
+                return fastNode;
+            }
+
+            slowNode = slowNode.nextNode;
+            fastNode = fastNode.nextNode;
+            if (fastNode != null) {
+                fastNode = fastNode.nextNode;
+            }
+        }
+        return null;
+
+    }
+    /*
+     * title:查找链表中倒数第k个节点
+     * explanation:
+     * tip:可以定义两个指针,前面的指针先走k步,要注意边界问题还有空指针
+     * example:
+     * param:
+     * return:
+     */
+    public ListNode findKthToTail(ListNode head, int k){
+        if(head == null || k == 0){
+            return null;
+        }
+//        int ahead = 0;
+//        int behind = 0;
+        ListNode ahead = head;
+        ListNode behind = null;
+        //当i=0的时候,ahead指针指向的是1节点,所以当i=k-2的时候,ahead指针指向的就是k-1节点
+        for(int i = 0; i < k - 1; ++i){
+            //判断是不是k有没有超出链表的最大长度
+            if(ahead.nextNode != null){
+                ahead = ahead.nextNode;
+            }else{
+                return null;
+            }
+        }
+        //这时候behind指针指向0节点,和ahead指针正好相差k个节点
+        behind = head;
+        while(ahead.nextNode != null){
+            ahead = ahead.nextNode;
+            behind = behind.nextNode;
+        }
+
+        return behind;
+    }
+
+    /*
+     * title:调整数组的顺序是的所有的奇数在前面所有的偶数在后面
+     * explanation:
+     * tip:定义两个指针一个从前往后，一个从后往前
+     * example:
+     * param:
+     * return:
+     */
+    public void reorderOddEven(int[] nums){
+        if(nums == null || nums.length == 0){
+            return;
+        }
+        int begin = 0;
+        int end = nums.length - 1;
+        while(begin < end){
+            while(begin < end && condition(nums[begin])){
+                begin ++;
+            }
+            while(begin < end && !condition(nums[end])){
+                end --;
+            }
+            int temp = nums[begin];
+            nums[begin] = nums[end];
+            nums[end] = temp;
+        }
+
+    }
+    //判断分组条件，分在前面的返回ture，后面的返回false
+    //增强代码的重用性能，可以改变条件
+    public boolean condition(int num){
+        return ((num & 0x01) == 1) ? true : false;
+    }
+    /*
+     * title:表示数值的字符串
+     * explanation:判断一个字符串是否是数字,可以是小数,整数,科学计数法
+     * tip:分成两种情况有整数部分和没有整数部分，首先‘.’的前面可以没有数字，后面要有，‘e’或者‘E’的前后都要有数字
+     * example:
+     * param:
+     * return:
+     */
+    public boolean isNumeric(String string){
+        if(StringUtils.isEmpty(string))
+            return false;
+        char[] chars = string.toCharArray();
+        int[] index = {0};//指向当前所在字符位置的指针
+        //先判断字符串中小数点之前的字符情况,如果存在的话
+        /*
+        * true 说明遇到不是数字的字符之前有若干个数字
+        * false 说明没有数字
+        * */
+        boolean numeric = scanInteger(chars,index);
+        //然后判断小数点之后的情况
+        if(chars[index[0]] == '.'){
+            index[0] ++;
+            /*
+            * false | false 说明小数点之前没有数字，后面也没有数字
+            * true 说明前后有一方有数字
+            *
+            * */
+            //如果.后面直接是指数，直接返回false
+            if(chars[index[0]] == 'e' || chars[index[0]] == 'E')
+                return false;
+            numeric = numeric | scanUnsignedInteger(chars,index);
+        }
+        //然后判断字符 e或E 前后的数字情况，前后都要有数字才行
+        if(chars[index[0]] == 'e' || chars[index[0]] == 'E'){
+            ++ index[0];
+            numeric = numeric && scanInteger(chars,index);
+        }
+        //此时index应该已经到了结尾
+        return numeric && index[0] == chars.length;
+
+    }
+    //判断一个字符从传进来的index开始是不是有若干个数字
+    public boolean scanUnsignedInteger(char[] chars,int[] index){
+        int lastIndex =  index[0];
+        while(index[0] < chars.length && chars[index[0]] >= '0' && chars[index[0]] <= '9'){
+            ++ index[0];
+        }
+
+        return index[0] > lastIndex;
+
+    }
+    //字符串可能会带有 + -
+    public boolean scanInteger(char[] chars,int [] index){
+        if(chars[index[0]] == '+' || chars[index[0]] == '-'){
+            ++ index[0];
+        }
+        return scanUnsignedInteger(chars,index);
+    }
+
+
+
+    /*
+     * title:正则表达式匹配
+     * explanation:实现一个函数来匹配包含'.'和'*'的正则表达式
+     * tip:'.'代表任意字符,'*'代表任意个或者0个前一个字符
+     * example:aba与a.a匹配
+     * param:
+     * return:匹配则返回true
+     */
+    public boolean match(String str,String pattern){
+        if(str == null || pattern == null){
+            return false;
+        }
+
+        char[] strs = str.toCharArray();
+        char[] patterns = pattern.toCharArray();
+        return matchCoere(strs,0,patterns,0);
+    }
+
+    public boolean matchCoere(char[] str,int indexOfStr,char[] pattern,int indexOfPattern){
+        //如果两者都到达了结尾
+        if(indexOfPattern == pattern.length && indexOfStr == str.length){
+            return true;
+        }
+        //如果正则到达了结尾,字符串没有到
+        if(indexOfPattern == pattern.length && indexOfStr != str.length){
+            return false;
+        }
+        //如果传进来的正则的第二个字符是'*'
+        if(indexOfPattern + 1 < pattern.length && pattern[indexOfPattern + 1] == '*'){
+            //如果正则的第一个字符和字符串的匹配 或者 正则的第一个字符是'.'且字符串没有到结尾
+            if(pattern[indexOfPattern] == str[indexOfStr] || (pattern[indexOfPattern] == '.' && indexOfStr != str.length)){
+                //假设*代表0个
+                return matchCoere(str,indexOfStr ,pattern,indexOfPattern + 2)
+                        //假设*代表1个
+                        || matchCoere(str,indexOfStr + 1,pattern,indexOfPattern + 2)
+                        //假设*代表若干个
+                        || matchCoere(str,indexOfStr + 1,pattern,indexOfPattern );
+            }else{
+                //说明*只能代表0个
+                matchCoere(str,indexOfStr ,pattern,indexOfPattern + 2);
+            }
+        }
+        //传进来的正则的第二个字符不是'*',且第一个字符匹配,
+        if(pattern[indexOfPattern] == str[indexOfStr] || (pattern[indexOfPattern] == '.' && indexOfStr != str.length)){
+            return matchCoere(str,indexOfStr + 1,pattern,indexOfPattern + 1);
+        }
+        return false;
+    }
+    /*
+     * title:删除链表中重复的节点
+     * explanation:在已经排序的链表中删除重复的节点
+     * tip:要注意重复节点之前的节点要始终和重复节点的后一个节点相连
+     * example:
+     * param:
+     * return:
+     */
+    public ListNode deleteDuplicatedNode(ListNode headNode){
+        if(headNode == null ){
+            logger.info("illegal input ");
+            return null;
+        }
+        ListNode curNode = headNode;    //当前节点
+        ListNode preNode = null;    //当前节点的前一个节点
+        while(curNode != null){ //当前节点不为空
+            ListNode nextNode = curNode.nextNode;   //当前节点的下一个节点
+            if(nextNode != null && curNode.val == nextNode.val){    //下一个节点不为空且与当前节点重复
+                int value = curNode.val;
+                ListNode nodeToBeDel = curNode;    //定义要删除的节点
+                while(nodeToBeDel.nextNode != null && nodeToBeDel.nextNode.val == value){   //比较节点值,直到找到不相同的值
+                    nextNode = nextNode.nextNode;   //保存下一个节点的下一个节点
+                    nodeToBeDel.nextNode = null;    //删除当前要删除节点的下一个重复节点
+                    nodeToBeDel.nextNode = nextNode;    //将当前要删除的节点连接到之前保存的nextNode
+                }
+                if(nodeToBeDel == headNode){    //当前要删除的节点,也就是当前节点如果是头结点的话
+                    headNode = nextNode;
+                    curNode = nextNode;
+                }else {
+                    //将当前要删除的节点的前一个节点指向下一个节点
+                    preNode.nextNode = nextNode;
+                    curNode = nextNode;
+                }
+
+            }else{
+                preNode = curNode;
+                curNode = nextNode;
+            }
+
+
+        }
+        return headNode;
+    }
     /*
      * title:删除链表的节点
      * explanation:在O(1)时间内删除指定节点
@@ -36,7 +369,7 @@ public class ToOffer {
             nodeToBeDeleted.val = node.val;
             nodeToBeDeleted.nextNode = node.nextNode;
         }
-        //链表只有一个节点,即尾节点
+        //链表只有一个节点,即尾节点,或者要删除的节点就是头结点
         else if(headNode == nodeToBeDeleted){
             headNode = null;
         }
@@ -131,7 +464,7 @@ public class ToOffer {
         boolean isOverflow = false; //是否溢出,用来判断是不是达到最大的数位
         int takeover = 0; //进位标志
         for (int i = length - 1; i >= 0; --i) {
-            int sumN = number[i] - '0' + takeover;  // 代表这个位置上的数字和进位相加的结果,一开始没有进位
+            int sumN = number[i] - '0' + takeover;  // 字符数字转换成数字,代表这个位置上的数字和进位相加的结果,一开始没有进位
             if (i == length - 1) {
                 sumN++;    //是最后一位数字的时候,自加1
             }
@@ -141,7 +474,7 @@ public class ToOffer {
                 } else {
                     sumN -= 10; //满10清零
                     takeover = 1;   //进位标志置1
-                    number[i] = (char) ('0' + sumN); //转换成字符保存
+                    number[i] = (char) ('0' + sumN); //数字转换成数字字符保存
                 }
             } else {
                 number[i] = (char) ('0' + sumN);

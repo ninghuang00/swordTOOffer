@@ -1,6 +1,7 @@
 package cn.hn.algoriththm;
 
 import cn.hn.utils.Log;
+import cn.hn.utils.TestUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -30,6 +31,106 @@ public class ToOfferTest {
 
 
     @Test
+    public void mergeList() throws Exception {
+        int[] nums1 = {1,3,5,7,9};
+        int[] nums2 = {2,3,4,6,8};
+        ListNode head1 = ListNode.createList(nums1);
+        ListNode head2 = ListNode.createList(nums2);
+        ListNode.printList(to.mergeList(head1,head2));
+        ListNode.printList(to.mergeList(null,null));
+    }
+
+    @Test
+    public void reverseList() throws Exception {
+        int[] nums = {1,2,3,4,5,6};
+        ListNode head = ListNode.createList(nums);
+        ListNode.printList(head);
+        ListNode.printList(to.reverseList(head));
+    }
+
+    @Test
+    public void entryNodeOfLoop() throws Exception {
+        int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        ListNode head = ListNode.createList(nums);
+        ListNode entryNode = null;
+        ListNode tailNode = head;
+        int count = 1;
+        while (tailNode.nextNode != null) {
+            if(count == 4){
+                entryNode = tailNode;
+            }
+            count ++;
+            tailNode = tailNode.nextNode;
+        }
+        tailNode.nextNode = entryNode;
+
+        ListNode entryNodeFound = to.entryNodeOfLoop(head);
+        logger.info("hahh");
+
+    }
+
+    @Test
+    public void findKthToTail() throws Exception {
+        int[] nums = {8,7,6,5,4,3,2,1};
+        int[] ks = {0,1,6,8,9};
+        ListNode head = ListNode.createList(nums);
+        for(int k:ks){
+            ListNode kNode = to.findKthToTail(head,k);
+            if(kNode != null){
+                logger.info("the kth node to tail is " + kNode.val);
+            }else{
+                logger.info("is null");
+            }
+        }
+    }
+
+    @Test
+    public void reorderOddEven() throws Exception {
+        int[] nums = {1,3,4,6,8,5,3,4,2,9,8,0,12,3};
+        int[] nums2 = {4,2,6,8,1,3,9,5};
+        int[] nums3 = {3};
+        logger.info(Arrays.toString(nums3));
+        to.reorderOddEven(nums3);
+        logger.info(Arrays.toString(nums3 ));
+    }
+
+    @Test
+    public void isNumeric() throws Exception {
+
+        String[] nums = {"12.e2",".201E12","-123.12e-12","123.123e10","12.12e12.22"};
+        for(String s : nums){
+            logger.info(s + " is a num : " + to.isNumeric(s));
+        }
+    }
+
+    @Test
+    public void match() throws Exception {
+        String string1 = "huangning";//代表一个
+        String string2 = "huangning";//代表0个
+        String string3 = "huangggning";//代表若干个
+        String pattern1 = "huang*ning";
+
+        boolean bool ;
+        System.out.println("ca");
+        bool = to.match(string1,pattern1);
+        bool = to.match(string2,pattern1);
+        bool = to.match(string3,pattern1);
+
+
+    }
+
+    @Test
+    public void deleteDuplicatedNode() throws Exception {
+        int nums[] = {1,1,2,3,4,5,5};
+        ListNode headNode = ListNode.createList(nums);
+        ListNode.printList(headNode);
+        System.out.println();
+
+        ListNode.printList(to.deleteDuplicatedNode(headNode));
+
+    }
+
+    @Test
     public void deleteNode() throws Exception {
         ListNode node1 = new ListNode();
         ListNode node2 = new ListNode();
@@ -48,21 +149,20 @@ public class ToOfferTest {
         node5.nextNode = null;
 
         ListNode node = node1;
-        while(node.nextNode != null ){
+        while(node != null ){
             System.out.println(node.val);
             node = node.nextNode;
         }
-        System.out.println(node.val);
 
         System.out.println();
         to.deleteNode(node1,node5);
 
         node = node1;
-        while(node.nextNode != null ){
+        while(node != null ){
             System.out.println(node.val);
             node = node.nextNode;
         }
-        System.out.println(node.val);
+
 
     }
 

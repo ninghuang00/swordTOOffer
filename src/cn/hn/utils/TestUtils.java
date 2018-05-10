@@ -1,15 +1,14 @@
-package cn.hn.algoriththm;
+package cn.hn.utils;
+
+import cn.hn.algoriththm.ListNode;
 
 /**
- * Created by huangning on 2017/10/9.
+ * Created by huangning on 2017/10/10.
  */
-public class ListNode {
-    public int val;
-    public ListNode nextNode;
-
-    // 根据传入的数组生成单向链表
+public class TestUtils {
+    /*// 根据传入的数组生成单向链表
     public static ListNode createList(int[] nums){
-        /*ListNode headNode = new ListNode();
+        *//*ListNode headNode = new ListNode();
         headNode.val = nums[0];
         headNode.nextNode = null;
         ListNode curNode = headNode;
@@ -22,7 +21,7 @@ public class ListNode {
 
         }
 
-        return headNode;*/
+        return headNode;*//*
         return createListHelper(nums,0);
     }
     private static ListNode createListHelper(int[] nums,int index){
@@ -41,6 +40,5 @@ public class ListNode {
             System.out.println(node.val);
             node = node.nextNode;
         }
-    }
-
+    }*/
 }
