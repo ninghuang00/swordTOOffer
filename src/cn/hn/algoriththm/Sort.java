@@ -9,6 +9,137 @@ import java.util.Random;
 public class Sort {
 
     /*
+     * title:归并排序
+     * explanation:时间复杂度O(N*logN) 额外空间复杂度O(N)
+     * tip:
+     * example:
+     * param:
+     * return:
+     */
+    public static void mergeSort(int[] arr, int start, int end) {
+        if (arr == null || start < 0 || end >= arr.length || start > end) {
+            throw new RuntimeException("illegal input");
+        }
+        mergeProcessor(arr, start, end);
+
+    }
+
+    public static void mergeProcessor(int[] arr, int start, int end) {
+        if (start == end) {
+            return;
+        }
+        int mid = (start + end)/2;
+        mergeProcessor(arr, start, mid);
+        mergeProcessor(arr,mid + 1,end);
+        merge(arr, start, mid, end);
+
+    }
+
+    public static void merge(int[] arr, int start, int mid, int end) {
+        int[] helper = new int[end - start + 1];
+        int count = 0;
+        int left = start;
+        int right = mid + 1;
+        //要合并的两个数组依次从第一个数开始比较,小的放在helper先放进
+        while (left <= mid && right <= end) {
+            if (arr[left] <= arr[right]) {
+                helper[count++] = arr[left++];
+            } else {
+                helper[count++] = arr[right++];
+            }
+
+        }
+        //将剩下的数字放进helper数组
+        if (left > mid) {
+            while (right <= end) {
+                helper[count++] = arr[right++];
+            }
+        } else {
+            while (left <= mid) {
+                helper[count++] = arr[left++];
+            }
+        }
+        //将helper数组拷贝回arr数组
+        for (int i = 0; i < helper.length; i++) {
+            arr[start + i] = helper[i];
+        }
+    }
+
+
+    /*
+     * title:插入排序
+     * explanation:时间复杂度最好O(N) 最差O(N^2) 额外空间复杂度O(1)
+     * tip: 从第二个数字开始,循环到最后一个数字,每次循环将当前数字和前面的数字比较,符合条件就交换,直到不满足条件
+     * example:
+     * param:
+     * return:
+     */
+    public static void insertionSort(int[] arr, int start, int end) {
+        if (arr == null || start < 0 || end >= arr.length || start > end) {
+            throw new RuntimeException("illegal input");
+        }
+
+        for (int i = start + 1; i <= end; i++) {
+            for(int j = i; j > start; j --) {
+                if (arr[j] < arr[j - 1]) {
+                    swap(arr, j, j - 1);
+                } else {
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+    /*
+     * title:冒泡排序
+     * explanation:遍历交换 时间复杂度O(N^2) 额外空间复杂度O(1)
+     * tip:
+     * example:
+     * param:
+     * return:
+     */
+    public static void bubbleSort(int[] arr, int start, int end) {
+        if (arr == null || start < 0 || end >= arr.length || start > end) {
+            throw new RuntimeException("illegal input");
+        }
+
+        while (start < end) {//当遍历范围大于0
+            for (int j = start; j + 1 < end; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swap(arr, j, j + 1);
+                }
+            }
+            end--;//每次遍历完减少下次遍历的范围
+        }
+    }
+
+    /*
+     * title:选择排序
+     * explanation:时间复杂度O(N^2) 额外空间复杂度O(1)
+     * tip:遍历数组长度次数 每次遍历选择最大或者最小的数字放在遍历的开头
+     * example:
+     * param:
+     * return:
+     */
+    public static void selectionSort(int[] arr, int start, int end) {
+        if (arr == null || start < 0 || end >= arr.length || start > end) {
+            throw new RuntimeException("illegal input");
+        }
+        while (start < end) {//当遍历范围大于0
+            int indexOfMax = end;//记录这次遍历中最大值的下标
+            for (int i = start; i <= end; i++) {
+                indexOfMax = arr[indexOfMax] > arr[i] ? indexOfMax : i;
+            }
+            swap(arr, end, indexOfMax);//将遍历得到的最大值交换到数组最后
+            end--;//缩小范围
+        }
+
+
+    }
+
+    /*
      * title:优化后的快排
      * explanation:优化partition函数,找出等于区域
      * tip:
@@ -17,11 +148,13 @@ public class Sort {
      * return:
      */
     public static void quickSort2(int[] arr, int start, int end) {
-        if (start < end) {
-            swap(arr, start + (int) (Math.random() * (end - start + 1)), end);
-            int[] pivot = partition2(arr, start, end);
+        if (start < end && start >= 0 && end < arr.length) {
+            swap(arr, start + (int) (Math.random() * (end - start + 1)), end);//随机选择数组中的一个数放到数组最后作为基准
+            int[] pivot = partition2(arr, start, end);//返回的处理后基准两侧的下标
             quickSort2(arr, start, pivot[0] - 1);
             quickSort2(arr, pivot[1] + 1, end);
+        } else {
+            throw new RuntimeException("illegal");
         }
     }
 
@@ -50,7 +183,7 @@ public class Sort {
     空间复杂度:O(nlogn)
      */
     public static void quickSort(int[] nums, int start, int end) {
-        if (nums == null || start < 0 || end >= nums.length) {
+        if (nums == null || start < 0 || end >= nums.length || start > end) {
             throw new RuntimeException("illegal input");
         }
 
@@ -69,7 +202,7 @@ public class Sort {
     在数组中选定一个数,将大于这个数的放右边,小的放左边
      */
     private static int partition(int[] nums, int start, int end) {
-        if (nums == null || end >= nums.length || start < 0) {
+        if (nums == null || end >= nums.length || start < 0 || start > end) {
             throw new RuntimeException("illegal input ");
         }
         int smaller = start - 1;    //用于指向比基数小的数字
