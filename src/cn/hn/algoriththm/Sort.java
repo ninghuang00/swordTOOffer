@@ -9,6 +9,79 @@ import java.util.Random;
 public class Sort {
 
     /*
+     * title:堆排序
+     * explanation:时间复杂度O(N*logN) 额外空间复杂度O(1)
+     * tip:先将数组排成大根堆,然后交换首尾两个数字,然后从第一个数字到倒数第二个数字排成大根堆,再交换,直到排完序
+     *      将一个数组编程大根堆的时间复杂度是log1 + log2 + log3 + ... + log(N-1) = O(N),
+     *      然后调整一个大根堆的时间复杂度是O(logN)
+     * example:
+     * param:
+     * return:
+     */
+    public static void heapSort(int[] arr) {
+        if (arr == null) {
+            throw new RuntimeException("illegal input");
+        }
+        int start = 0;
+        int end = arr.length - 1;
+        buildMaxHeap(arr);
+        while (end > start) {
+            swap(arr, start, end);
+            maxHeapIfY(arr, start, --end);
+        }
+
+    }
+
+    //如果大根堆中start位置的数字变小了,重新调整成大根堆
+    public static void maxHeapIfY(int[] arr, int start, int end) {
+        int index = start;
+        int sonLeft = index * 2 + 1;
+        int sonRight = index * 2 + 2;
+        int maxIndex = index;
+        //如果是叶节点就不用继续了
+        if (index <= (end - start - 1) / 2) {
+            if (sonLeft <= end && arr[sonLeft] > arr[maxIndex]) {
+                maxIndex = sonLeft;
+            }
+            if (sonRight <= end && arr[sonRight] > arr[maxIndex]) {
+                maxIndex = sonRight;
+            }
+            //如果父节点就是最大的就不用继续了
+            if (maxIndex != index) {
+                swap(arr, index, maxIndex);
+                maxHeapIfY(arr, maxIndex, end);
+            }
+        }
+    }
+
+    //当前节点i的左叶节点是2i+1,右叶节点是2i+2,当前节点的父节点是(i-1)/2
+    //tip 从下往上,从右往左,从最后一个非叶子节点开始将子树调整成大根堆
+    public static void buildMaxHeap(int[] arr) {
+        //这里保证i一定是非叶子节点
+        int start = 0;
+        int end = arr.length - 1;
+        for (int i = (end + start - 1) / 2; i >= 0; i--) {
+            int sonLeft = 2 * i + 1;
+            int sonRight = 2 * i + 2;
+            //如果右叶子节点越界则只要比较左子节点即可
+            if (sonRight > end) {
+                if (arr[i] >= arr[sonLeft]) {
+                    continue;
+                } else {
+                    swap(arr, i, sonLeft);
+                }
+            } else {
+                int sonMax = arr[sonLeft] > arr[sonRight] ? sonLeft : sonRight;
+                if (arr[i] >= arr[sonMax]) {
+                    continue;
+                } else {
+                    swap(arr, i, sonMax);
+                }
+            }
+        }
+    }
+
+    /*
      * title:归并排序
      * explanation:时间复杂度O(N*logN) 额外空间复杂度O(N)
      * tip:
@@ -28,9 +101,9 @@ public class Sort {
         if (start == end) {
             return;
         }
-        int mid = (start + end)/2;
+        int mid = (start + end) / 2;
         mergeProcessor(arr, start, mid);
-        mergeProcessor(arr,mid + 1,end);
+        mergeProcessor(arr, mid + 1, end);
         merge(arr, start, mid, end);
 
     }
@@ -80,7 +153,7 @@ public class Sort {
         }
 
         for (int i = start + 1; i <= end; i++) {
-            for(int j = i; j > start; j --) {
+            for (int j = i; j > start; j--) {
                 if (arr[j] < arr[j - 1]) {
                     swap(arr, j, j - 1);
                 } else {
