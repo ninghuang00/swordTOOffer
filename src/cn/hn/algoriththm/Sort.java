@@ -1,5 +1,7 @@
 package cn.hn.algoriththm;
 
+import cn.hn.utils.SwapUtil;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -26,7 +28,7 @@ public class Sort {
         int end = arr.length - 1;
         buildMaxHeap(arr);
         while (end > start) {
-            swap(arr, start, end);
+            SwapUtil.swapInt(arr, start, end);
             maxHeapIfY(arr, start, --end);
         }
 
@@ -48,7 +50,7 @@ public class Sort {
             }
             //如果父节点就是最大的就不用继续了
             if (maxIndex != index) {
-                swap(arr, index, maxIndex);
+                SwapUtil.swapInt(arr, index, maxIndex);
                 maxHeapIfY(arr, maxIndex, end);
             }
         }
@@ -56,7 +58,7 @@ public class Sort {
 
     //当前节点i的左叶节点是2i+1,右叶节点是2i+2,当前节点的父节点是(i-1)/2
     //tip 从下往上,从右往左,从最后一个非叶子节点开始将子树调整成大根堆
-    public static void buildMaxHeap(int[] arr) {
+    private static void buildMaxHeap(int[] arr) {
         //这里保证i一定是非叶子节点
         int start = 0;
         int end = arr.length - 1;
@@ -68,14 +70,14 @@ public class Sort {
                 if (arr[i] >= arr[sonLeft]) {
                     continue;
                 } else {
-                    swap(arr, i, sonLeft);
+                    SwapUtil. swapInt(arr, i, sonLeft);
                 }
             } else {
                 int sonMax = arr[sonLeft] > arr[sonRight] ? sonLeft : sonRight;
                 if (arr[i] >= arr[sonMax]) {
                     continue;
                 } else {
-                    swap(arr, i, sonMax);
+                    SwapUtil.swapInt(arr, i, sonMax);
                 }
             }
         }
@@ -89,7 +91,7 @@ public class Sort {
      * param:
      * return:
      */
-    public static void mergeSort(int[] arr, int start, int end) {
+        public static void mergeSort(int[] arr, int start, int end) {
         if (arr == null || start < 0 || end >= arr.length || start > end) {
             throw new RuntimeException("illegal input");
         }
@@ -155,7 +157,7 @@ public class Sort {
         for (int i = start + 1; i <= end; i++) {
             for (int j = i; j > start; j--) {
                 if (arr[j] < arr[j - 1]) {
-                    swap(arr, j, j - 1);
+                    SwapUtil.swapInt(arr, j, j - 1);
                 } else {
                     break;
                 }
@@ -181,7 +183,7 @@ public class Sort {
         while (start < end) {//当遍历范围大于0
             for (int j = start; j + 1 < end; j++) {
                 if (arr[j] > arr[j + 1]) {
-                    swap(arr, j, j + 1);
+                    SwapUtil.swapInt(arr, j, j + 1);
                 }
             }
             end--;//每次遍历完减少下次遍历的范围
@@ -205,7 +207,7 @@ public class Sort {
             for (int i = start; i <= end; i++) {
                 indexOfMax = arr[indexOfMax] > arr[i] ? indexOfMax : i;
             }
-            swap(arr, end, indexOfMax);//将遍历得到的最大值交换到数组最后
+            SwapUtil.swapInt(arr, end, indexOfMax);//将遍历得到的最大值交换到数组最后
             end--;//缩小范围
         }
 
@@ -222,7 +224,7 @@ public class Sort {
      */
     public static void quickSort2(int[] arr, int start, int end) {
         if (start < end && start >= 0 && end < arr.length) {
-            swap(arr, start + (int) (Math.random() * (end - start + 1)), end);//随机选择数组中的一个数放到数组最后作为基准
+            SwapUtil.swapInt(arr, start + (int) (Math.random() * (end - start + 1)), end);//随机选择数组中的一个数放到数组最后作为基准
             int[] pivot = partition2(arr, start, end);//返回的处理后基准两侧的下标
             quickSort2(arr, start, pivot[0] - 1);
             quickSort2(arr, pivot[1] + 1, end);
@@ -232,19 +234,19 @@ public class Sort {
     }
 
     private static int[] partition2(int[] arr, int start, int end) {
-        //某一状态西,smaller指针代表小于基准的数字的范围,bigger代表大于基准的数字的范围
+        //某一状态下,smaller指针代表小于基准的数字的范围,bigger代表大于基准的数字的范围
         int smaller = start - 1;//smaller代表小于的范围
         int bigger = end;//bigger代表大于的范围
         while (start < bigger) {
             if (arr[start] < arr[end]) {//当start指针发现小于基准的数字,交换到smaller指针处,向前移动smaller指针和start指针
-                swap(arr, ++smaller, start++);
+                SwapUtil.swapInt(arr, ++smaller, start++);
             } else if (arr[start] > arr[end]) {//当start指针发现大于基准的数字,和bigger交换,往回移动bigger指针,因为不确定bigger指针指向的数字,所以start指针不移动,接着判断
-                swap(arr, --bigger, start);
+                SwapUtil.swapInt(arr, --bigger, start);
             } else {//当start指针发现相等的数字,直接移动start指针
                 start++;
             }
         }
-        swap(arr, bigger, end);//因为用最后一个数作比较,所以要和bigger中最小的数字交换
+        SwapUtil.swapInt(arr, bigger, end);//因为用最后一个数作比较,所以要和bigger中最小的数字交换
         return new int[]{smaller + 1, bigger};//返回的是最后基准的下标
     }
 
@@ -280,7 +282,7 @@ public class Sort {
         }
         int smaller = start - 1;    //用于指向比基数小的数字
         int index = randomInRange(start, end);   //生成给定范围的随机数,确定基数
-        swap(nums, index, end);   //将选定的基数换到数组最后
+        SwapUtil.swapInt(nums, index, end);   //将选定的基数换到数组最后
 
         for (index = start; index < end; ++index) {
             if (nums[index] < nums[end]) {//当index发现小于基数的数字时
@@ -289,13 +291,13 @@ public class Sort {
                 //正常情况下smaller==index
                 //不相等时smaller和index之间的数是大于基数的,所以就是把smaller后面index发现的小于基数的数字换上来
                 if (smaller != index) {
-                    swap(nums, smaller, index);
+                    SwapUtil.swapInt(nums, smaller, index);
                 }
             }
         }
 
         ++smaller;
-        swap(nums, smaller, end);
+        SwapUtil.swapInt(nums, smaller, end);
         return smaller;
     }
 
@@ -309,11 +311,7 @@ public class Sort {
         return random.nextInt(end - start + 1) + start;
     }
 
-    private static void swap(int[] nums, int a, int b) {
-        int temp = nums[a];
-        nums[a] = nums[b];
-        nums[b] = temp;
-    }
+
 
     public static void main(String[] args) {
         int[] arr = {2, 5, 1, 3, 9, 5, 8, 6, 7};
