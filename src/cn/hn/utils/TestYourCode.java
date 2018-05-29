@@ -18,9 +18,10 @@ import java.util.Arrays;
  */
 public class TestYourCode implements CallbackMethod {
     CallbackMethod callbackMethod;
-    private static final int SIZE = 10;
-    private static final int VALUE = 10;
+    private static final int SIZE = 100;
+    private static final int VALUE = 100;
     private static final int TEST_TIMES = 500;
+    private long count = 0;
 
     public TestYourCode(CallbackMethod callbackMethod) {
         this.callbackMethod = callbackMethod;
@@ -29,6 +30,7 @@ public class TestYourCode implements CallbackMethod {
     public void testArr() {
         boolean succeed = true;
         for (int i = 0;i < TEST_TIMES;i++) {
+            count ++;
             int[] originArr = ArrayUtils.generateRandomArray(SIZE, VALUE);
             if (originArr.length == 0) {
                 continue;
@@ -45,7 +47,7 @@ public class TestYourCode implements CallbackMethod {
                 break;
             }
         }
-        System.out.println(succeed ? "Nice" : "What's the fuck");
+        System.out.println(succeed ? "Nice! " + TEST_TIMES + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
 
     }
 
@@ -72,7 +74,7 @@ public class TestYourCode implements CallbackMethod {
                 break;
             }
         }
-        System.out.println(succeed ? "Nice" : "What's the fuck");
+        System.out.println(succeed ? "Nice! " + TEST_TIMES + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
     }
 
     public void yourMethod(int[] arr) {
