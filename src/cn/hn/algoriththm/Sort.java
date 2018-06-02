@@ -233,7 +233,7 @@ public class Sort {
         }
     }
 
-    private static int[] partition2(int[] arr, int start, int end) {
+    public static int[] partition2(int[] arr, int start, int end) {
         //某一状态下,smaller指针代表小于基准的数字的范围,bigger代表大于基准的数字的范围
         int smaller = start - 1;//smaller代表小于的范围
         int bigger = end;//bigger代表大于的范围
