@@ -77,6 +77,11 @@ public class TestYourCode implements CallbackMethod {
         System.out.println(succeed ? "Nice! " + TEST_TIMES + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
     }
 
+
+    public void testNodeReturn() {
+
+    }
+
     public void yourMethod(int[] arr) {
 //        sortInt(arr);
         callbackMethod.yourMethod(arr);

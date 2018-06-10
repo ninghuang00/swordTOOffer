@@ -39,6 +39,9 @@ public class Node {
     }
 
     public static Node createNodeList(int[] arr) {
+        if (arr.length == 0) {
+            return null;
+        }
         Node head = new Node();
         Node currentNode = head;
         int i = 0;
