@@ -1,8 +1,6 @@
 package cn.hn.others;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by huangning on 2018/6/11.
@@ -16,6 +14,96 @@ public class TreeNode {
         this.val = val;
     }
 
+    public static boolean isCBT(TreeNode node) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(node);
+        boolean allNullFlag = false;
+        while (node != null || !queue.isEmpty()) {
+            node = queue.poll();
+            if (node.right != null && node.left == null) {
+                return false;
+            }
+
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+
+            if ((node.left == null && node.right == null) || (node.left != null && node.right == null)) {
+                allNullFlag = true;
+                break;
+            }
+
+        }
+
+        while (allNullFlag && !queue.isEmpty()) {
+            node = queue.poll();
+            if (!(node.left == null && node.right == null)) {
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+
+    //判断是否是二叉搜索树
+    public static boolean isBST(TreeNode node) {
+        if (node == null) {
+            return false;
+        }
+
+        TreeNode lastNode = null;
+        Stack<TreeNode> stack = new Stack<>();
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.pop();
+                if (lastNode != null) {
+                    if (lastNode.val > node.val) {
+                        return false;
+                    }
+                }
+                lastNode = node;
+                node = node.right;
+
+            }
+        }
+
+        return true;
+    }
+
+    public static TreeNode createBinarySearchTree() {
+        TreeNode node = new TreeNode(5);
+        node.left = new TreeNode(3);
+        node.right = new TreeNode(7);
+        node.left.left = new TreeNode(2);
+        node.left.right = new TreeNode(4);
+        node.right.left = new TreeNode(6);
+        node.right.right = new TreeNode(8);
+
+        return node;
+    }
+
+    public static TreeNode createBinaryTree() {
+        TreeNode node = new TreeNode(5);
+        node.left = new TreeNode(3);
+        node.right = new TreeNode(4);
+//        node.left.left = new TreeNode(2);
+        node.left.right = new TreeNode(10);
+        node.right.left = new TreeNode(6);
+        node.right.right = new TreeNode(8);
+
+        return node;
+    }
+
+    //前序遍历 非递归
     public static List<Integer> preOrder(TreeNode root) {
         if (root == null) {
             return null;
@@ -39,6 +127,7 @@ public class TreeNode {
 
     }
 
+    //中序遍历 非递归
     public static List<Integer> inOrder(TreeNode root) {
         if (root == null) {
             return null;
@@ -60,6 +149,7 @@ public class TreeNode {
 
     }
 
+    //后序遍历 非递归
     public static List<Integer> postOrder(TreeNode root) {
         if (root == null) {
             return null;
@@ -86,6 +176,7 @@ public class TreeNode {
         return list;
     }
 
+    //前序遍历 递归
     public static List<Integer> preOrderRecu(TreeNode root) {
         if (root == null) {
             return null;
@@ -107,6 +198,7 @@ public class TreeNode {
 
     }
 
+    //中序遍历 递归
     public static List<Integer> inOrderRecu(TreeNode root) {
         if (root == null) {
             return null;
@@ -128,6 +220,7 @@ public class TreeNode {
 
     }
 
+    //后序遍历 递归
     public static List<Integer> postOrderRecu(TreeNode root) {
         if (root == null) {
             return null;
@@ -158,6 +251,7 @@ public class TreeNode {
 
     }
 
+    //打印二叉树
     private static void printInOrder(TreeNode node, int height, String pointTo, int gap) {
         if (node == null) {
             return;

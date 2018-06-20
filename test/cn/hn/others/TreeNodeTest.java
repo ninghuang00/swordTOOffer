@@ -16,15 +16,21 @@ public class TreeNodeTest {
 
     @Before
     public void createTree() {
-        head = new TreeNode(1);
-        head.left = new TreeNode(2);
-        head.right = new TreeNode(3);
-        head.left.left = new TreeNode(4);
-        head.right.left = new TreeNode(5);
-        head.left.right = new TreeNode(9);
-        head.right.right = new TreeNode(6);
-        head.left.left.right = new TreeNode(7);
+        head = TreeNode.createBinaryTree();
+    }
+
+    @Test
+    public void isCBT() {
         TreeNode.printTree(head);
+
+        System.out.println(TreeNode.isCBT(head));
+
+    }
+
+    @Test
+    public void isBST() {
+        System.out.println(TreeNode.isBST(TreeNode.createBinarySearchTree()));
+        System.out.println(TreeNode.isBST(TreeNode.createBinaryTree()));
     }
 
     @Test
