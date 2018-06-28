@@ -58,6 +58,39 @@ public class TreeNodeTest {
         System.out.println(TreeNode.postOrderRecu(head));
     }
 
+    @Test
+    public void serialization() {
+        TreeNode.printTree(head);
+        System.out.println(TreeNode.serializationPreOrder(head));
+
+
+    }
+
+    @Test
+    public void deserialization() {
+        String string = "5_3_#_10_#_#_4_6_#_#_8_#_#_";
+//        char[] chars = string.toCharArray();
+//        for (char c : chars) {
+//            System.out.println((c-'0')==5);
+//        }
+        TreeNode.printTree(TreeNode.deserializationPreOrder(string));
+
+
+    }
+
+    @Test
+    public void isContainTree() {
+        TreeNode root = new TreeNode(4);
+//        root.left = new TreeNode(6);
+        root.right = new TreeNode(8);
+        TreeNode.printTree(root);
+        TreeNode.printTree(head);
+
+        System.out.println("is tree head contains tree root?" + TreeNode.isContainTree(head, root));
+//        System.out.println("is tree head contains tree root?" + TreeNode.isContainTree(root,head));
+
+
+    }
 
 
 

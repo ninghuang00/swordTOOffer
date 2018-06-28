@@ -1,5 +1,7 @@
 package cn.hn.others;
 
+import cn.hn.algoriththm.KMP;
+
 import java.util.*;
 
 /**
@@ -10,10 +12,71 @@ public class TreeNode {
     public TreeNode left;
     public TreeNode right;
 
+    public TreeNode() {
+
+    }
     public TreeNode(int val) {
         this.val = val;
     }
 
+    public static String serializationPreOrder(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serializationHelp(root, sb);
+        return sb.toString();
+    }
+
+    public static void serializationHelp(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            sb.append("#_");
+            return;
+        }
+        sb.append(node.val + "_");
+        serializationHelp(node.left, sb);
+        serializationHelp(node.right, sb);
+
+    }
+
+    public static TreeNode deserializationPreOrder(String string) {
+        String[] strs = string.split("_");
+        Queue<String> queue = new LinkedList<>();
+        for (String s : strs) {
+            queue.offer(s);
+        }
+        return deserializationHelper(queue);
+
+    }
+
+    public static TreeNode deserializationHelper(Queue<String> queue) {
+        String val = queue.poll();
+        if (val.equals("#")) {
+            return null;
+        }
+        TreeNode node = new TreeNode(Integer.valueOf(val));
+        node.left = deserializationHelper(queue);
+        node.right = deserializationHelper(queue);
+        return node;
+    }
+
+    //树root1是否包含树root2
+    public static boolean isContainTree(TreeNode root1,TreeNode root2) {
+        String str1 = serializationPreOrder(root1);
+        String str2 = serializationPreOrder(root2);
+        if (KMP.isContain(str1, str2) != -1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println(Integer.valueOf("66"));
+
+    }
+
+
+    //是否是完全二叉树
     public static boolean isCBT(TreeNode node) {
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(node);
