@@ -1,6 +1,9 @@
 package cn.hn.algoriththm;
 
+import cn.hn.CallbackMethod;
+import cn.hn.CallbackMethodImpl;
 import cn.hn.utils.PrintUtil;
+import cn.hn.utils.TestYourCode;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -11,15 +14,32 @@ import static org.junit.Assert.*;
  * Created by huangning on 2017/9/26.
  */
 public class SortTest {
+    class HeapSort extends CallbackMethodImpl{
+        @Override
+        public void yourMethod(int[] arr) {
+            Sort.heapSort(arr);
+        }
+
+        @Override
+        public void rightMethod(int[] arr) {
+            Arrays.sort(arr);
+        }
+    }
 
     @Test
     public void heapSort() throws Exception {
-        int[] nums = {4,2,5,3,1,0,2};
-//        int[] nums = {4,2,5,3,1};
-//        int[] nums = {4,2,5,3};
-        Sort.heapSort(nums);
-        PrintUtil.printIntArray(nums);
+//        int[] arr = {6, 19, 22, 26, 68, 25, 13, 28, 12};
+        int[] arr = {6, 27, 78, 13, 70, 23, 86};
 
+        Sort.heapSort(arr);
+
+
+    }
+
+    @Test
+    public void testYourCode() throws Exception {
+        TestYourCode test = new TestYourCode(new HeapSort());
+        test.testArr(new int[0]);
     }
 
     @Test

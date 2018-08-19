@@ -23,4 +23,14 @@ public class CallbackMethodImpl implements CallbackMethod {
     public int rightMethodWithReturn(int[] arr) {
         return 0;
     }
+
+    @Override
+    public int yourMethodWithReturn(int[] arr, int aim) {
+        return 0;
+    }
+
+    @Override
+    public int rightMethodWithReturn(int[] arr, int aim) {
+        return 0;
+    }
 }

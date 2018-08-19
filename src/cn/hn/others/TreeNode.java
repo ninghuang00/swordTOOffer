@@ -19,6 +19,81 @@ public class TreeNode {
         this.val = val;
     }
 
+    //morris遍历,前序遍历就是第一次到达这个节点的时候打印
+    public static void morris(TreeNode root) {
+        TreeNode cur = root;
+        TreeNode mostRight = null;
+        while (cur != null) {
+            mostRight = cur.left;
+            if (mostRight != null) {
+                while (mostRight.right != null && mostRight.right != cur) {
+                    mostRight = mostRight.right;
+                }
+                if (mostRight.right == null) {
+                    mostRight.right = cur;
+                    System.out.print(cur.val + " ");//左移之前打印是前序
+                    cur = cur.left;
+                    continue;
+                } else {
+                 mostRight.right = null;
+                }
+
+            }else {
+                System.out.print(cur.val + " ");//左孩子空是第一次也是最后一次到达,打印是前序
+            }
+//            System.out.print(cur.val + " ");//右移之前打印是中序遍历
+            cur = cur.right;
+
+        }
+    }
+
+    public static void morrisPos(TreeNode root) {
+        TreeNode cur = root;
+        TreeNode mostRight = null;
+        while (cur != null) {
+            mostRight = cur.left;
+            if (mostRight != null) {
+                while (mostRight.right != null && mostRight.right != cur) {
+                    mostRight = mostRight.right;
+                }
+                if (mostRight.right == null) {
+                    mostRight.right = cur;
+                    cur = cur.left;
+                    continue;
+                } else {
+                    mostRight.right = null;
+                    printEdge(cur.left);//从左到右,逆序打印每一条\边界就是后序遍历
+                }
+
+            }
+            cur = cur.right;
+        }
+        printEdge(root);
+    }
+
+
+    public static void printEdge(TreeNode head) {
+        TreeNode tail = reverseEdge(head);
+        TreeNode cur = tail;
+        while (cur != null) {
+            System.out.print(cur.val + " ");
+            cur = cur.right;
+        }
+        reverseEdge(tail);
+    }
+
+    public static TreeNode reverseEdge(TreeNode from) {
+        TreeNode pre = null;
+        TreeNode next = null;
+        while (from != null) {
+            next = from.right;
+            from.right = pre;
+            pre = from;
+            from = next;
+        }
+        return pre;
+    }
+
     public static String serializationPreOrder(TreeNode root) {
         StringBuilder sb = new StringBuilder();
         serializationHelp(root, sb);

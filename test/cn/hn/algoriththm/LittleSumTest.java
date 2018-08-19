@@ -14,7 +14,7 @@ public class LittleSumTest {
     private TestYourCode testYourCode = new TestYourCode(littleSum);
     @Test
     public void littleSum() throws Exception {
-        testYourCode.testReturn();
+        testYourCode.testReturn(new int[0]);
     }
 
 }

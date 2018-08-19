@@ -1,7 +1,6 @@
 package cn.hn.utils;
 
 import cn.hn.CallbackMethod;
-import cn.hn.others.Main;
 
 import java.util.Arrays;
 
@@ -18,20 +17,26 @@ import java.util.Arrays;
  */
 public class TestYourCode implements CallbackMethod {
     CallbackMethod callbackMethod;
-    private static final int SIZE = 100;
-    private static final int VALUE = 100;
-    private static final int TEST_TIMES = 500;
+    private int size = 10;
+    private int value = 100;
+    private int testTimes = 500;
     private long count = 0;
 
     public TestYourCode(CallbackMethod callbackMethod) {
         this.callbackMethod = callbackMethod;
     }
 
-    public void testArr() {
+    public void setRandomArrayConfig(int arraySize, int maxValue, int testTimes) {
+        this.testTimes = testTimes;
+        this.value = maxValue;
+        this.size = arraySize;
+    }
+
+    public void testArr(int[] nothing) {
         boolean succeed = true;
-        for (int i = 0;i < TEST_TIMES;i++) {
+        for (int i = 0; i < testTimes; i++) {
             count ++;
-            int[] originArr = ArrayUtils.generateRandomArray(SIZE, VALUE);
+            int[] originArr = ArrayUtils.generateRandomArray(size, value);
             if (originArr.length == 0) {
                 continue;
             }
@@ -47,19 +52,24 @@ public class TestYourCode implements CallbackMethod {
                 break;
             }
         }
-        System.out.println(succeed ? "Nice! " + TEST_TIMES + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
+        printRes(succeed);
 
     }
 
-    public void testReturn() {
+    private void printRes(boolean succeed) {
+        System.out.println(succeed ? "Nice! " + testTimes + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
+    }
+
+    public void testReturn(int[] nothing) {
         boolean succeed = true;
         int yourReturn;
         int rightReturn;
-        for (int i = 0;i < TEST_TIMES;i++) {
-            int[] originArr = ArrayUtils.generateRandomArray(SIZE, VALUE);
+        for (int i = 0; i < testTimes; i++) {
+            int[] originArr = ArrayUtils.generateRandomArray(size, value);
             if (originArr.length == 0) {
                 continue;
             }
+            count++;
             int[] arrForYourMethod = copyArray(originArr);
             int[] arrForRightMethod = copyArray(originArr);
 
@@ -68,17 +78,48 @@ public class TestYourCode implements CallbackMethod {
             rightReturn = rightMethodWithReturn(arrForRightMethod);
             if (yourReturn != rightReturn) {
                 succeed = false;
-                System.out.println("your return is " + yourReturn);
-                System.out.println("right return is " + rightReturn);
-                PrintUtil.printIntArray(originArr);
+                printWrongMsg(yourReturn,rightReturn,originArr);
                 break;
             }
         }
-        System.out.println(succeed ? "Nice! " + TEST_TIMES + " testcase passed" : "What's the fuck, testcase " + count + " failed!");
+        printRes(succeed);
+    }
+
+    public void testReturn(int[] nothing,int no) {
+        boolean succeed = true;
+        int yourReturn;
+        int rightReturn;
+        for (int i = 0; i < testTimes; i++) {
+            int[] originArr = ArrayUtils.generateRandomArray(size, value);
+            if (originArr.length == 0) {
+                continue;
+            }
+            count++;
+            int aim = ArrayUtils.getRandomInt(value);
+
+            int[] arrForYourMethod = copyArray(originArr);
+            int[] arrForRightMethod = copyArray(originArr);
+
+            yourReturn = yourMethodWithReturn(arrForYourMethod,aim);
+            rightReturn = rightMethodWithReturn(arrForRightMethod,aim);
+            if (yourReturn != rightReturn) {
+                succeed = false;
+                printWrongMsg(yourReturn,rightReturn,originArr);
+                System.out.println("aim is " + aim);
+                break;
+            }
+        }
+        printRes(succeed);
+    }
+
+    private void printWrongMsg(int yourReturn,int rightReturn, int[] originArr) {
+        System.out.println("your return is " + yourReturn);
+        System.out.println("right return is " + rightReturn);
+        PrintUtil.printIntArray(originArr);
     }
 
 
-    public void testNodeReturn() {
+    public void testNodeReturn(int[] nothing, int no) {
 
     }
 
@@ -102,6 +143,15 @@ public class TestYourCode implements CallbackMethod {
         return callbackMethod.rightMethodWithReturn(arr);
     }
 
+    @Override
+    public int yourMethodWithReturn(int[] arr, int aim) {
+        return callbackMethod.yourMethodWithReturn(arr, aim);
+    }
+
+    @Override
+    public int rightMethodWithReturn(int[] arr, int aim) {
+        return callbackMethod.rightMethodWithReturn(arr, aim);
+    }
 
     //返回数组拷贝
     public int[] copyArray(int[] arr) {

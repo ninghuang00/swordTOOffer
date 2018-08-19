@@ -12,7 +12,7 @@ public class FindMaxGapTest {
     private TestYourCode testYourCode = new TestYourCode(new FindMaxGap());
     @Test
     public void findMaxGap() throws Exception {
-        testYourCode.testReturn();
+        testYourCode.testReturn(new int[0]);
     }
 
     @Test

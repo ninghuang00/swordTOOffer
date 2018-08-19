@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 /**
  * Created by huangning on 2018/6/26.
+ * KMP算法
+ * 是否包含子字符串
  */
 public class KMP {
     public static int isContain(String str1, String str2) {

@@ -19,4 +19,8 @@ public class ArrayUtils {
         }
         return arr;
     }
+
+    public static int getRandomInt(int value) {
+        return Math.abs((int) (Math.random() * (value + 1)) - (int) (Math.random() * (value + 1))) + 1;
+    }
 }

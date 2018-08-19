@@ -12,4 +12,8 @@ public interface CallbackMethod {
 
     int rightMethodWithReturn(int[] arr);
 
+    int yourMethodWithReturn(int[] arr,int aim);
+
+    int rightMethodWithReturn(int[] arr,int aim);
+
 }

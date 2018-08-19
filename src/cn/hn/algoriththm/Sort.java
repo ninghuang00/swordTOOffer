@@ -27,59 +27,91 @@ public class Sort {
         int start = 0;
         int end = arr.length - 1;
         buildMaxHeap(arr);
-        while (end > start) {
+        while (end > 0) {
             SwapUtil.swapInt(arr, start, end);
-            maxHeapIfY(arr, start, --end);
+            //end位置现在是最大值,要从调整堆的范围中排除
+            heapIfY(arr, start, --end);
+//            heapIfIndex(arr, start, --end);
         }
 
     }
 
     //如果大根堆中start位置的数字变小了,重新调整成大根堆
-    public static void maxHeapIfY(int[] arr, int start, int end) {
-        int index = start;
-        int sonLeft = index * 2 + 1;
-        int sonRight = index * 2 + 2;
-        int maxIndex = index;
-        //如果是叶节点就不用继续了
-        if (index <= (end - start - 1) / 2) {
-            if (sonLeft <= end && arr[sonLeft] > arr[maxIndex]) {
-                maxIndex = sonLeft;
+    public static void heapIfY(int[] arr, int index, int size) {
+        int left = index * 2 + 1;
+        while (left <= size) {
+            int largest = left + 1 <= size && arr[left + 1] > arr[left] ? left + 1 : left;
+            largest = arr[largest] > arr[index] ? largest : index;
+            if (largest == index) {
+                break;
             }
-            if (sonRight <= end && arr[sonRight] > arr[maxIndex]) {
-                maxIndex = sonRight;
+            SwapUtil.swapInt(arr, largest, index);
+            index = largest;
+            left = index * 2 + 1;
+        }
+    }
+
+    //大根堆中从0位置开始,到end位置结束,index位置的数字变化了,重新调整大根堆
+    private static void heapIfIndex(int[] arr, int index, int end) {
+        int father = (index - 1) / 2;
+        if (father >= 0 && arr[index] > arr[father]) {  //变大且大于父节点的情况
+            while (father >= 0 && arr[index] > arr[father]) {
+                SwapUtil.swapInt(arr, index, father);
+                index = father;
+                father = (index - 1) / 2;
             }
-            //如果父节点就是最大的就不用继续了
-            if (maxIndex != index) {
+        } else {    //变小或者不变
+            int sonLeft = index * 2 + 1;
+            while (sonLeft <= end) {
+                //比较左右儿子
+                int maxIndex = sonLeft + 1 <= end && arr[sonLeft + 1] > arr[sonLeft] ? sonLeft + 1 : sonLeft;
+                //比较儿子中大的和父亲
+                maxIndex = arr[maxIndex] > arr[index] ? maxIndex : index;
+                if (maxIndex == index) {
+                    break;
+                }
                 SwapUtil.swapInt(arr, index, maxIndex);
-                maxHeapIfY(arr, maxIndex, end);
+                index = maxIndex;
+                sonLeft = 2 * index + 1;
+
             }
         }
     }
 
-    //当前节点i的左叶节点是2i+1,右叶节点是2i+2,当前节点的父节点是(i-1)/2
-    //tip 从下往上,从右往左,从最后一个非叶子节点开始将子树调整成大根堆
+    //当前节点i的父节点是(i-1)/2
+    //tip 从下往上,从右往左,从最后一个非叶子节点开始向下比较,尝试和儿子节点交换
+    //时间复杂度O(N)
     private static void buildMaxHeap(int[] arr) {
-        //这里保证i一定是非叶子节点
-        int start = 0;
-        int end = arr.length - 1;
-        for (int i = (end + start - 1) / 2; i >= 0; i--) {
-            int sonLeft = 2 * i + 1;
-            int sonRight = 2 * i + 2;
-            //如果右叶子节点越界则只要比较左子节点即可
-            if (sonRight > end) {
-                if (arr[i] >= arr[sonLeft]) {
-                    continue;
-                } else {
-                    SwapUtil. swapInt(arr, i, sonLeft);
+        for (int i = (arr.length - 1) / 2; i >= 0; i--) {
+            int j = i;
+            int sonLeft = (j * 2) + 1;
+            while (sonLeft < arr.length) {
+                int maxIndex = sonLeft + 1 < arr.length && arr[sonLeft + 1] > arr[sonLeft] ? sonLeft + 1 : sonLeft;
+                maxIndex = arr[maxIndex] > arr[j] ? maxIndex : j;
+                if (maxIndex == j) {
+                    break;
                 }
-            } else {
-                int sonMax = arr[sonLeft] > arr[sonRight] ? sonLeft : sonRight;
-                if (arr[i] >= arr[sonMax]) {
-                    continue;
-                } else {
-                    SwapUtil.swapInt(arr, i, sonMax);
-                }
+                SwapUtil.swapInt(arr, j, maxIndex);
+                j = maxIndex;
+                sonLeft = j * 2 + 1;
             }
+        }
+
+    }
+
+    //时间复杂度O(N*logN))
+    public static void buildMaxHeap2(int[] arr) {
+        //从上往下遍历每一个节点,并不断往上比较,尝试和父节点进行交换
+        for (int i = 0; i < arr.length; i++) {
+            maxHeapInsert(arr, i);
+        }
+    }
+
+    //这种构建大根堆的方式实际上应用于堆的大小没有确定时,需要一边插入节点一边调整
+    public static void maxHeapInsert(int[] arr, int j) {
+        while (arr[j] > arr[(j - 1) / 2]) {
+            SwapUtil.swapInt(arr, j, (j - 1) / 2);
+            j = (j - 1) / 2;
         }
     }
 
@@ -91,7 +123,7 @@ public class Sort {
      * param:
      * return:
      */
-        public static void mergeSort(int[] arr, int start, int end) {
+    public static void mergeSort(int[] arr, int start, int end) {
         if (arr == null || start < 0 || end >= arr.length || start > end) {
             throw new RuntimeException("illegal input");
         }
@@ -310,7 +342,6 @@ public class Sort {
         Random random = new Random();
         return random.nextInt(end - start + 1) + start;
     }
-
 
 
     public static void main(String[] args) {

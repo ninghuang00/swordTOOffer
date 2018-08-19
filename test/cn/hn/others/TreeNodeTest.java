@@ -19,6 +19,19 @@ public class TreeNodeTest {
         head = TreeNode.createBinaryTree();
     }
 
+
+    @Test
+    public void morrisPre(){
+        TreeNode.printTree(head);
+        TreeNode.morris(head);
+    }
+
+    @Test
+    public void morrisPost(){
+        TreeNode.printTree(head);
+        TreeNode.morrisPos(head);
+    }
+
     @Test
     public void isCBT() {
         TreeNode.printTree(head);
