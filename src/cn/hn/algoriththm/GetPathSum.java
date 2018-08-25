@@ -2,8 +2,11 @@ package cn.hn.algoriththm;
 
 /**
  * Created by huangning on 2018/6/24.
+ *
+ * 获得矩阵中的最短路径和
  */
 public class GetPathSum {
+    //返回从(x,y)位置开始到右下角的最短路径和
     public static int getMinSum(int[][] arr, int x, int y) {
         //位置来到了右下角
         if (x == arr[0].length - 1 && y == arr.length - 1) {
@@ -22,9 +25,9 @@ public class GetPathSum {
         int down = getMinSum(arr, x, y + 1);
         System.out.println("get here");
         return arr[x][y] + Math.min(right, down);
-
     }
 
+    //通过二维转换数组,改成dp
     public static int getMinPathDP(int[][] matrix) {
         int row = matrix.length - 1;
         int col = matrix[0].length - 1;
@@ -43,9 +46,7 @@ public class GetPathSum {
                 dp[x][y] = matrix[x][y] + Math.min(dp[x + 1][y], dp[x][y + 1]);
             }
         }
-
         return dp[0][0];
-
     }
 
     public static void main(String[] args) {

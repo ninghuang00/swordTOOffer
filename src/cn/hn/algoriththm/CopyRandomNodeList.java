@@ -9,17 +9,17 @@ import java.util.Set;
  */
 public class CopyRandomNodeList {
     public Node normalWay(Node head) {
-        //源节点到复制节点的映射
         Map<Node, Node> nodeMap = new HashMap<>();
         Node currentNode = head;
-        while (currentNode != null) {
+        while (currentNode != null) {//当前节点作为key,当前节点的复制节点作为value
+            //如果不做映射的话无法确定复制节点的指向
             nodeMap.put(currentNode, new Node(currentNode.getVal()));
             currentNode = currentNode.getNextNode();
         }
         currentNode = head;
-        Node copyOfNextNode;
-        Node copyOfRandomNode;
-        Node copyOfCurrentNode;
+        Node copyOfNextNode;//当前节点的下一个节点
+        Node copyOfRandomNode;//当前节点的随机节点
+        Node copyOfCurrentNode;//当前节点
         while (currentNode != null) {
             //根据源节点的指向,设置复制节点的指向
             copyOfNextNode = nodeMap.get(currentNode.getNextNode());
@@ -27,12 +27,9 @@ public class CopyRandomNodeList {
             copyOfCurrentNode = nodeMap.get(currentNode);
             copyOfCurrentNode.setNextNode(copyOfNextNode);
             copyOfCurrentNode.setRandomNode(copyOfRandomNode);
-
             currentNode = currentNode.getNextNode();
         }
-
         return nodeMap.get(head);
-
     }
 
     public Node betterWay(Node head) {
@@ -50,9 +47,9 @@ public class CopyRandomNodeList {
 
             currentNode = currentNode.getNextNode();
         }
-
+        //回到头结点
         currentNode = head;
-        //f复制节点的randomNode就是当前节点的randomNode的下一个节点(即它的复制节点)
+        //复制节点的randomNode就是当前节点的randomNode的下一个节点(即它的复制节点)
         while (currentNode != null) {
             copyNode = currentNode.getNextNode();
             copyNode.setRandomNode(currentNode.getRandomNode().getNextNode());
@@ -74,7 +71,7 @@ public class CopyRandomNodeList {
             currentNode.setNextNode(tempNode);
             //如果拷贝节点的下一个节点为空,说明到头了
             copyNode.setNextNode(tempNode == null ? null : tempNode.getNextNode());
-
+            //当前节点移动到拷贝节点的下一个节点
             currentNode = tempNode;
         }
 
