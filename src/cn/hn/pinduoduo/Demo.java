@@ -15,86 +15,75 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by huangning on 2018/7/20.
  */
-public class Demo extends Fa implements Action {
 
-    private int count;
-
-    public String name;
-
-    @Override
-    public void sing() {
-        System.out.println("sing song");
+public class Demo {
+    public Demo() {
     }
 
-    @Override
-    public void say() {
-        System.out.println(
-                "say a word"
-        );
+    boolean testEx() throws Exception {
+        boolean ret = true;
+        try {
+            ret = testEx1();
+            return ret;
+        } catch (Exception e) {
+            System.out.println("testEx, catch exception");
+            ret = false;
+            throw e;
+        } finally {
+            System.out.println("testEx, finally; return value=" + ret);
+//            return ret;
+        }
     }
 
-    ReentrantLock lock = new ReentrantLock();
-    Condition condition = lock.newCondition();
-
-
-    public void c() {
-
+    boolean testEx1() throws Exception {
+        boolean ret = true;
+        try {
+            ret = testEx2();
+            if (!ret) {
+                return false;
+            }
+            System.out.println("testEx1, at the end of try");
+            return ret;
+        } catch (Exception e) {
+            System.out.println("testEx1, catch exception");
+            ret = false;
+            throw e;
+        } finally {
+            System.out.println("testEx1, finally; return value=" + ret);
+//            return ret;
+        }
     }
 
+    boolean testEx2() throws Exception {
+        boolean ret = true;
+        try {
+            int b = 12;
+            int c;
+            for (int i = 2; i >= -2; i--) {
+                c = b / i;
+                System.out.println("i=" + i);
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("testEx2, catch exception");
+            ret = false;
+            throw e;
+        } finally {
+            System.out.println("testEx2, finally; return value=" + ret);
+//            return ret;
+        }
+    }
 
     public static void main(String[] args) {
-        Integer[] arr = {2, 7, 4, 6, 1, 2, 3, 4, 9, 8};
-
-        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
-        maxHeap.addAll(Arrays.asList(arr));
-
-        for (int i = 0 ; i < 5; i++) {
-            maxHeap.poll();
-            printQueue(maxHeap);
-        }
-
-
-    }
-
-    public static void printArr(int[] arr) {
-        for (int i : arr) {
-            System.out.print(i + " ");
-        }
-    }
-
-    public static void printQueue(Queue queue) {
-        Iterator iterator = queue.iterator();
-        while (iterator.hasNext()) {
-            System.out.print(iterator.next() + " ");
-        }
-        System.out.println();
-    }
-}
-
-
-class MyThread extends Thread {
-    public static int count = 0;
-
-    @Override
-    public void run() {
-        System.out.println("hi");
-
-        while (!isInterrupted()) {
-            for (int i = 0; i < 100000; i++) {
-                count++;
-            }
-
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-            interrupt();
-            for (int i = 0; i < 100000; i++) {
-                count++;
-            }
+        Demo testException1 = new Demo();
+        try {
+            testException1.testEx();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
+
+
+
+
